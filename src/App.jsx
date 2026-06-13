@@ -235,10 +235,6 @@ function App() {
     setIsLoading(true);
 
     try {
-      if (!apiKey || apiKey.trim() === '') {
-        throw new Error('API_KEY_MISSING');
-      }
-
       // Format conversation history for Groq
       // Exclude system message metadata and start fresh with system prompt
       const isHindiUser = detectHindiLanguage(userMsgText);
@@ -267,23 +263,60 @@ function App() {
       // Add the latest user message
       formattedMessages.push({ role: 'user', content: userMsgText });
 
-      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey.trim()}`
-        },
-        body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          messages: formattedMessages,
-          max_tokens: 1000
-        })
-      });
+      let response;
+      let useProxy = true;
+
+      // If the user entered their own API Key manually in the UI configuration,
+      // bypass the proxy and query Groq directly.
+      const envKey = import.meta.env.REACT_APP_GROQ_API_KEY || '';
+      if (apiKey && apiKey.trim() !== envKey.strip?.() && apiKey.trim() !== envKey.trim()) {
+        useProxy = false;
+      }
+
+      if (useProxy) {
+        try {
+          // Attempt to query the local Python FastAPI proxy server
+          response = await fetch('http://localhost:8000/api/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: 'llama-3.3-70b-versatile',
+              messages: formattedMessages,
+              max_tokens: 1000
+            })
+          });
+        } catch (proxyError) {
+          console.warn('FastAPI backend proxy is offline. Falling back to direct client-side Groq call.', proxyError);
+          useProxy = false;
+        }
+      }
+
+      // If proxy is bypassed or failed, query Groq directly from the browser
+      if (!useProxy) {
+        if (!apiKey || apiKey.trim() === '') {
+          throw new Error('API_KEY_MISSING');
+        }
+
+        response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey.trim()}`
+          },
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages: formattedMessages,
+            max_tokens: 1000
+          })
+        });
+      }
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
         console.error('Groq API Error:', errData);
-        throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+        throw new Error(errData?.error?.message || errData?.detail || `HTTP ${response.status}`);
       }
 
       const data = await response.json();

@@ -49,22 +49,27 @@ Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
    cd NayePankh-Chatbot
    ```
 
-2. **Install Dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Configure Environment Variables**:
+2. **Configure Environment Variables**:
    Create a `.env` file in the project root:
    ```env
    REACT_APP_GROQ_API_KEY=your_groq_api_key_here
    ```
 
-4. **Launch Local Server**:
+3. **Start the Python Backend Proxy**:
+   Install Python dependencies and start the FastAPI server:
    ```bash
+   pip install -r backend/requirements.txt
+   python -m uvicorn backend.main:app --reload --port 8000
+   ```
+   The backend will run at `http://localhost:8000/` and proxy Groq requests securely.
+
+4. **Start the React Frontend**:
+   In a separate terminal, install node dependencies and launch the Vite development server:
+   ```bash
+   npm install
    npm run dev
    ```
-   Open your browser and navigate to `http://localhost:5173/`.
+   Navigate to `http://localhost:5173/` in your browser. The frontend will automatically detect and query your local backend proxy!
 
 5. **Build for Production**:
    ```bash

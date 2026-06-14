@@ -27,20 +27,48 @@ This application allows students, volunteers, and donors to interact with a warm
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Technology Stack & Architecture
 
-- **Frontend**: React 19 (Hooks, State Management)
+- **Frontend**: React 19 (Modular component-based architecture)
 - **Tooling/Bundler**: Vite 8 (Hot Module Replacement)
 - **Styling**: Tailwind CSS v4 & PostCSS Autoprefixer
+- **Backend API**: FastAPI (Python 3.10+) running uvicorn
 - **API Engine**: Groq Chat Completions API
 - **Typography**: Google Font 'Poppins'
+
+### Codebase Directory Map
+
+```text
+├── backend/
+│   ├── main.py                 # FastAPI backend proxy (runs synchronously in a threadpool)
+│   └── requirements.txt        # Backend dependencies
+├── src/
+│   ├── components/
+│   │   ├── ChatHeader.jsx      # Top app bar and actions
+│   │   ├── ChatInput.jsx       # Custom text entry footer & workflow controls
+│   │   ├── ChatMessages.jsx    # Chat bubble streams & interactive actions
+│   │   ├── MobileDrawer.jsx    # Responsive slide-over panel for mobile
+│   │   └── WelcomeScreen.jsx   # Initial view & persona selector
+│   ├── constants/
+│   │   └── chatConstants.js    # NGO rules, prompts, and persona configurations
+│   ├── utils/
+│   │   └── chatHelpers.js      # Language detection and text download handlers
+│   ├── App.css
+│   ├── App.jsx                 # Controller orchestrating child states
+│   ├── index.css               # Base Tailwind theme definitions
+│   └── main.jsx                # React app mounting point
+├── .env                        # Local development variables (git-ignored)
+├── .gitignore                  # Git credentials protection config
+├── vite.config.js              # Vite packaging config with REACT_APP_ prefixing
+└── package.json                # Node script runners and client dependencies
+```
 
 ---
 
 ## 🚀 Installation & Local Setup
 
 ### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
+Make sure you have [Node.js](https://nodejs.org/) and Python 3.10+ installed on your machine.
 
 ### Setup Steps
 1. **Clone the Repository**:
@@ -53,6 +81,7 @@ Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
    Create a `.env` file in the project root:
    ```env
    REACT_APP_GROQ_API_KEY=your_groq_api_key_here
+   REACT_APP_API_URL=http://localhost:8000
    ```
 
 3. **Start the Python Backend Proxy**:
@@ -80,14 +109,15 @@ Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 
 ## 🔒 Security & Deployment Guidelines
 
-### Key Exposure Risk
-React applications run entirely in the browser. When you run `npm run build`, any exposed environment variables (prefixed with `REACT_APP_` in this project) are compiled directly into the static JS files. **Do not deploy this app to public sites with a hardcoded key in your environment settings.**
+### Key Exposure Risk & Mitigation
+React applications compile down to static client-side JavaScript. When building for production (`npm run build`), environment variables prefixed with `REACT_APP_` are embedded in the bundle and are inspectable by browser visitors.
 
-### Safe Options:
-* **Option A: Internal/Coordinator Console (Zero Cost)**: Deploy the app with *no* environment variables set on the hosting server. Instruct your staff to input their own Groq keys directly into the UI (using the settings gear on the welcome page or the top warning banner). The key is stored in browser memory only and disappears on tab close.
-* **Option B: Public Release (Proxy Server)**: Host a tiny middleware server (e.g., Express or serverless function) containing the Groq key, and route all requests from React through that proxy to shield the credentials from public inspect element.
-
-*Note: Your `.env` and `.env.local` files are pre-configured in `.gitignore` to prevent accidental credential leakage to GitHub.*
+To deploy the chatbot securely for public use:
+1. **Secure Backend**: Set `GROQ_API_KEY` on your production FastAPI server.
+2. **Restrict CORS**: Define the `ALLOWED_ORIGINS` environment variable on your backend server to only permit requests from your frontend domain (e.g. `ALLOWED_ORIGINS=https://chatbot.nayepankh.org`).
+3. **Frontend build settings**: 
+   - Define `REACT_APP_API_URL` to point to your deployed backend proxy (e.g. `https://api.nayepankh-chatbot.com`).
+   - **Do not** define `REACT_APP_GROQ_API_KEY` in the production build environment. This leaves the API key securely hosted on the backend server only.
 
 ---
 

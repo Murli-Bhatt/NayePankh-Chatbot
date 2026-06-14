@@ -202,8 +202,9 @@ function App() {
 
       if (useProxy) {
         try {
-          // Attempt to query the local Python FastAPI proxy server
-          response = await fetch('http://localhost:8000/api/chat', {
+          // Query the configured API URL or fallback to local port 8000
+          const apiBaseUrl = import.meta.env.REACT_APP_API_URL || 'http://localhost:8000';
+          response = await fetch(`${apiBaseUrl}/api/chat`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

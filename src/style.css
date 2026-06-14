@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Lock sidebar background and borders */
+section[data-testid="stSidebar"] {
+    background-color: #0B0F19 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Center and constrain chat messages container */
+div[data-testid="stChatMessage"] {
+    max-width: 760px;
+    margin: 1.2rem auto !important;
+    background-color: transparent !important;
+    padding: 0.5rem 0 !important;
+    border-bottom: none !important;
+}
+
+/* Target user message block and align it to the right */
+div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
+    flex-direction: row-reverse !important;
+    text-align: right !important;
+}
+
+/* Adjust avatar alignment spacing for user messages */
+div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) div[data-testid="stChatMessageAvatarUser"] {
+    margin-left: 0.8rem !important;
+    margin-right: 0 !important;
+}
+
+/* Style circular User Avatar Badge */
+div[data-testid="stChatMessageAvatarUser"],
+div[data-testid="stChatMessageAvatarUser"] > div {
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #FF6F00, #E65100) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25) !important;
+    width: 38px !important;
+    height: 38px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+div[data-testid="stChatMessageAvatarUser"] svg {
+    fill: #FFFFFF !important;
+    width: 18px !important;
+    height: 18px !important;
+}
+
+/* Style circular Assistant Avatar Badge */
+div[data-testid="stChatMessageAvatarCustom"],
+div[data-testid="stChatMessageAvatarCustom"] > div {
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #2E7D32, #1B5E20) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25) !important;
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
+}
+
+/* Style user text content into a clean chat bubble on the right */
+div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) div[data-testid="stChatMessageContent"] {
+    background-color: rgba(46, 125, 50, 0.15) !important;
+    color: #F1F5F9 !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+    border-radius: 18px 18px 4px 18px !important;
+    padding: 12px 18px !important;
+    display: inline-block !important;
+    text-align: left !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    max-width: 80% !important;
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+}
+
+/* Style bot text content into a clean chat bubble on the left */
+div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarCustom"]) div[data-testid="stChatMessageContent"] {
+    background-color: rgba(30, 41, 59, 0.55) !important;
+    color: #F1F5F9 !important;
+    border: 1px solid rgba(148, 163, 184, 0.15) !important;
+    border-radius: 18px 18px 18px 4px !important;
+    padding: 12px 18px !important;
+    display: inline-block !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    max-width: 80% !important;
+    text-align: left !important;
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+}
+
+/* Style and center the chat input */
+div[data-testid="stChatInput"] {
+    max-width: 760px;
+    margin: 0 auto !important;
+    border-radius: 24px !important;
+    background-color: #1E293B !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Welcome dashboard card style */
+.welcome-container {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    margin-bottom: 30px;
+    color: #F1F5F9;
+}
+
+.badge-logo {
+    background: linear-gradient(135deg, #2E7D32 0%, #FF6F00 100%);
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    border-radius: 20px;
+    margin: 0 auto 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.primary-green-text {
+    color: #4CAF50;
+}
+
+.accent-orange-text {
+    color: #FF9800;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Custom summary block card */
+.summary-card {
+    background-color: #1E293B;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 10px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    color: #F1F5F9;
+}
+
+.summary-title {
+    color: #4CAF50;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+.intake-indicator {
+    background-color: #14532D;
+    border-left: 4px solid #4CAF50;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: #A5D6A7;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+/* Style action buttons and links */
+a {
+    color: #4CAF50 !important;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}

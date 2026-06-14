@@ -29,16 +29,28 @@ This application allows students, volunteers, and donors to interact with a warm
 
 - **Frontend & Backend UI Framework**: Streamlit (Python-native UI framework)
 - **API Engine**: Groq Chat Completions API
+- **Styling**: Vanilla CSS (Premium Glassmorphic Aesthetics)
 - **Dependencies**: `requests`, `python-dotenv`
 
 ### Codebase Directory Map
 
+The codebase is modularized according to industry standard best practices:
+
 ```text
 ├── .streamlit/
 │   └── config.toml             # Custom theme parameters (NayePankh primary green and accent orange)
-├── app.py                      # Single unified application file containing all UI, state-machine, and API logic
+├── src/
+│   ├── components/
+│   │   ├── chat.py             # Chat feed layout, avatar configurations, quick action chips, and input bars
+│   │   ├── sidebar.py          # Secure developer key overrides, application navigation, and chat exporter
+│   │   └── welcome.py          # Landing dashboard and persona selection buttons
+│   ├── constants.py            # Static variables, prompts, and persona configurations
+│   ├── state_handlers.py       # Session state triggers, message queueing, and volunteer intake flow
+│   ├── style.css               # Premium Glassmorphic Midnight stylesheet overrides
+│   └── utils.py                # Hinglish detection patterns, Groq request builder, and exporter formatters
+├── app.py                      # Main entrypoint coordinator (~68 lines)
 ├── .env                        # Local development variables (git-ignored)
-├── .gitignore                  # Git credentials protection config
+├── .gitignore                  # Git safety configuration (keeps bytecode & local keys ignored)
 └── requirements.txt            # Python dependencies (Streamlit, requests, python-dotenv)
 ```
 
@@ -79,22 +91,28 @@ Make sure you have Python 3.11 or 3.12 installed on your machine.
 
 ## 🔒 Security & Deployment Guidelines
 
-Deploying a Streamlit app to Render (or Streamlit Community Cloud) is extremely simple since it runs as a single service.
+The codebase has undergone a deployment security audit. No API credentials are hardcoded.
+
+### Streamlit Community Cloud (Recommended)
+1. Push the repository to GitHub.
+2. Go to [share.streamlit.io](https://share.streamlit.io/) and log in.
+3. Click **New app**, select your repository and branch, and set the entrypoint file path to `app.py`.
+4. Click **Advanced settings...** and paste your Groq API key under the secrets tab:
+   ```toml
+   GROQ_API_KEY = "gsk_your_actual_key_here"
+   ```
+5. Click **Deploy!**
 
 ### Deploying to Render (Web Service)
-
-Create a **New Web Service** on Render:
-* **Repository**: Select your chatbot repo.
-* **Language**: `Python 3`
-* **Root Directory**: *(Leave empty - repository root)*
+If deploying to Render as a Web Service:
 * **Build Command**: `pip install -r requirements.txt`
 * **Start Command**:
   ```bash
   streamlit run app.py --server.port $PORT --server.address 0.0.0.0
   ```
 * **Environment Variables**:
-  * **`GROQ_API_KEY`**: Paste your valid Groq API key (`gsk_...`).
-  * **`PYTHON_VERSION`**: Set to `3.11.9` or `3.12.3` (to avoid dependency build conflicts).
+  * Set `GROQ_API_KEY` to your valid Groq API key (`gsk_...`).
+  * Set `PYTHON_VERSION` to `3.11.9` or `3.12.3` (avoids build tool mismatch).
 
 ---
 

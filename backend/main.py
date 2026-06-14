@@ -11,10 +11,14 @@ load_dotenv(dotenv_path=parent_env)
 
 app = FastAPI(title="NayePankh Chatbot Backend Proxy")
 
-# Configure CORS so React app on port 5173 can call this API
+# Configure CORS so React app on port 5173 can call this API.
+# In production, set the ALLOWED_ORIGINS env variable (e.g. ALLOWED_ORIGINS=https://your-frontend.com)
+origins_env = os.getenv("ALLOWED_ORIGINS", "*")
+allowed_origins = [o.strip() for o in origins_env.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, restrict this to your specific frontend domain
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -30,7 +34,7 @@ class ChatPayload(BaseModel):
     max_tokens: int = 1000
 
 @app.post("/api/chat")
-async def chat_proxy(payload: ChatPayload):
+def chat_proxy(payload: ChatPayload):
     # Fetch key from environment (loaded from parent .env file)
     api_key = os.getenv("REACT_APP_GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
     if not api_key:
